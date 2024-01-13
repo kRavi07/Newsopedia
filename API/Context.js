@@ -1,7 +1,11 @@
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
-import { getNewsAPI,getSearchAPI, getSourceAPI,getCountryNewsAPI } from "./util";
-
+import {
+  getNewsAPI,
+  getSearchAPI,
+  getSourceAPI,
+  getCountryNewsAPI,
+} from "./util";
 
 export const NewsContext = createContext();
 
@@ -22,103 +26,77 @@ const Context = ({ children }) => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-
-
   const fetchNews = async (reset = category) => {
-    
     try {
+      setIsLoading(true);
+      setIndex(1);
+      const url = await getNewsAPI(reset);
+      const { data } = await axios.get(url);
 
-        setIsLoading(true);
-        setIndex(1);
-
-        
-        const { data } = await axios.get(getNewsAPI(reset));
-
-        setIsLoading(false);
-        setNews(data.articles);
-    
-    
+      setIsLoading(false);
+      setNews(data.articles);
     } catch (error) {
-        
-        
+      console.log(error);
 
-        setIsLoading(false);
-        setIsError(true);
-        setErrorMessage("Something went wrong, please try again later");
-        
-
-
+      setIsLoading(false);
+      setIsError(true);
+      setErrorMessage("Something went wrong, please try again later");
     }
   };
 
   const fetchNewsfromSource = async () => {
     try {
-      setIsLoading(true);  
+      setIsLoading(true);
       setIndex(1);
-      const { data } = await axios.get(getSourceAPI(source));
+      const url = await getSourceAPI(source);
+      const { data } = await axios.get(url);
       setNews(data.articles);
-        setIsLoading(false);
-      
+      setIsLoading(false);
     } catch (error) {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fecthNewsByCountry = async () => {
     try {
+      setIsLoading(true);
+      setIndex(1);
+      const url = await getCountryNewsAPI(country, category);
+      const { data } = await axios.get(url);
 
-
-        setIsLoading(true);
-        setIndex(1);
-        const {data} = await axios.get(getCountryNewsAPI( country,category));
-
-        
-    
-        setNews(data.articles);
-        setIsLoading(false);
-        
+      setNews(data.articles);
+      setIsLoading(false);
     } catch (error) {
-        
-        setIsLoading(false);
+      setIsLoading(false);
     }
+  };
+
+  const fetchNewsBySearch = async () => {
+    try {
+      setIsLoading(true);
+      setIndex(1);
+      const url = await getSearchAPI(query);
+      const { data } = await axios.get(url);
+      const filteredData = data.articles?.slice(0, 50);
+      setNews(filteredData);
+      setIsLoading(false);
+      setSearchText("");
+      setSearchSource("");
+      setQuery("");
+    } catch (error) {
+      setIsLoading(false);
     }
+  };
 
-
-    const fetchNewsBySearch = async () => {
-        try {
-            setIsLoading(true);
-            setIndex(1);
-            const {data} = await axios.get(getSearchAPI(query));
-            //select the first 50 articles
-            const filteredData = data.articles.slice(0,30);
-            setNews(filteredData);
-            setIsLoading(false);
-            setSearchText("");
-            setSearchSource("");
-            setQuery("");
-        } catch (error) {
-            setIsLoading(false);
-        }
-    }
-
-    
-
-
-
-    useEffect(() => {
+  useEffect(() => {
     fecthNewsByCountry();
-    }, [country]);
+  }, [country]);
 
-    useEffect(() => {
-
-      if(query!==""){
-        fetchNewsBySearch();
-      }
-
-    }, [query]);
-
-
-
+  useEffect(() => {
+    if (query !== "") {
+      fetchNewsBySearch();
+    }
+  }, [query]);
 
   useEffect(() => {
     fetchNews();
@@ -150,7 +128,7 @@ const Context = ({ children }) => {
         setSearchText,
         searchSource,
         setSearchSource,
-        errorMessage
+        errorMessage,
       }}
     >
       {children}

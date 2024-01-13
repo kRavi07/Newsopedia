@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
-import { categories, sources, country } from "../API/util";
+import { categories, sources, country } from "../API/constants";
 import { NewsContext } from "../API/Context";
 import Search from "../components/Search";
 import SelectComponent from "../components/SelectComponent";
@@ -20,14 +20,8 @@ const DiscoverScreen = () => {
   const windowHeight = Dimensions.get("window").height;
   const SLIDE_WIDTH = Math.round(windowWidth / 3.5);
 
-  const {
-    setCategory,
-    setSource,
-    darkTheme,
-    setCountry,
-    fecthNewsByCountry,
-    category,
-  } = useContext(NewsContext);
+  const { setCategory, setSource, darkTheme, setCountry } =
+    useContext(NewsContext);
 
   return (
     <View
@@ -51,7 +45,7 @@ const DiscoverScreen = () => {
           width: windowWidth,
         }}
         data={categories}
-        renderItem={({ item, index }) => {
+        renderItem={({ item }) => {
           return (
             <TouchableOpacity
               onPress={() => setCategory(item.name)}
@@ -80,7 +74,7 @@ const DiscoverScreen = () => {
           width: windowWidth,
         }}
         data={country}
-        renderItem={({ item, index }) => {
+        renderItem={({ item }) => {
           return (
             <TouchableOpacity
               onPress={() => {

@@ -17,7 +17,8 @@ const SelectComponent = () => {
   useEffect(() => {
     const fetchSources = async () => {
       try {
-        const { data } = await axios.get(getSources());
+        const url = await getSources();
+        const { data } = await axios.get(url);
         const filteredSources = data.sources.filter(
           (source) => source.language === "en"
         );
