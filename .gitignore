@@ -11,7 +11,7 @@ npm-debug.*
 .env
 .env.production
 .env.development
-
+secrets.js
 web-build/
 
 # macOS

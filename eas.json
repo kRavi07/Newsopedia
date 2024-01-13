@@ -3,13 +3,10 @@
     "version": ">= 3.6.0"
   },
   "build": {
-    
     "preview": {
-
-      "android":{
+      "android": {
         "buildType": "apk"
-      },
-
+      }
     },
     "preview2": {
       "android": {
@@ -19,9 +16,7 @@
     "preview3": {
       "developmentClient": true
     },
-    "production": {
-      
-    }
+    "production": {}
   },
   "submit": {
     "production": {}
